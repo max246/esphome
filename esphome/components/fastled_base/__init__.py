@@ -6,6 +6,7 @@ from esphome.const import (
     CONF_NUM_LEDS,
     CONF_RGB_ORDER,
     CONF_MAX_REFRESH_RATE,
+    CONF_GRADIENT_PALETTE,
 )
 
 CODEOWNERS = ["@OttoWinter"]
@@ -29,6 +30,16 @@ BASE_SCHEMA = light.ADDRESSABLE_LIGHT_SCHEMA.extend(
         cv.Required(CONF_NUM_LEDS): cv.positive_not_null_int,
         cv.Optional(CONF_RGB_ORDER): cv.one_of(*RGB_ORDERS, upper=True),
         cv.Optional(CONF_MAX_REFRESH_RATE): cv.positive_time_period_microseconds,
+        cv.Optional(CONF_GRADIENT_PALETTE): cv.All(
+            [cv.int_range(min=0, max=255)],
+            cv.Length(min=3, max=3),
+            [cv.int_range(min=0, max=255)],
+            cv.Length(min=3, max=3),
+            [cv.int_range(min=0, max=255)],
+            cv.Length(min=3, max=3),
+            [cv.int_range(min=0, max=255)],
+            cv.Length(min=3, max=3),
+        ),
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -39,6 +50,9 @@ async def new_fastled_light(config):
 
     if CONF_MAX_REFRESH_RATE in config:
         cg.add(var.set_max_refresh_rate(config[CONF_MAX_REFRESH_RATE]))
+
+    if CONF_GRADIENT_PALETTE in config:
+        cg.add(var.set_gradiet_pallette(*config[CONF_GRADIENT_PALETTE]))
 
     await light.register_light(var, config)
     # https://github.com/FastLED/FastLED/blob/master/library.json

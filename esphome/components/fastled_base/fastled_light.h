@@ -28,6 +28,16 @@ class FastLEDLightOutput : public light::AddressableLight {
   /// Set a maximum refresh rate in µs as some lights do not like being updated too often.
   void set_max_refresh_rate(uint32_t interval_us) { this->max_refresh_rate_ = interval_us; }
 
+  void set_gradiet_pallette(int black1, int black2, int black3, int black4 int red1, int red2, int red3, int red4,
+                            int yellow1, int yellow2, int yellow3, int yellow4, int white1, int white2, int white3,
+                            int white4) {
+    currentPalette = CRGBPalette16(black1, black2, black3, black4, red1, red2, red3, red4, yellow1, yellow2, yellow3,
+                                   yellow4, white1, white2, white3, white4);
+    use_pallet = true;
+  }
+
+  CRGBPalette16 currentPalette;
+  bool use_pallet = false;
   /// Add some LEDS, can only be called once.
   CLEDController &add_leds(CLEDController *controller, int num_leds) {
     this->controller_ = controller;
